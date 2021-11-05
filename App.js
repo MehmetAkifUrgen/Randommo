@@ -6,11 +6,12 @@ import {
   StatusBar,
   Button,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 
 import WheelOfFortune from 'react-native-wheel-of-fortune';
 
-const participants = ['bahadır', 'zeko', 'akif'];
 class App extends Component {
   constructor(props) {
     super(props);
@@ -19,6 +20,10 @@ class App extends Component {
       winnerValue: null,
       winnerIndex: null,
       started: false,
+      value: null,
+      exe: '',
+      visible: false,
+      datas: ['A', 'B', 'C'],
     };
     this.child = null;
   }
@@ -29,10 +34,29 @@ class App extends Component {
     });
     this.child._onPress();
   };
+  onPressOut = () => {
+    this.setState({visible: true});
+  };
+  inputs = () => {
+    var values = [];
+    for (let index = 0; index < this.state.value; index++) {
+      return (
+        <ScrollView>
+          <TextInput
+            style={styles.input}
+            onChangeText={value => this.setState({exe: value})}
+            value={this.state.exe}
+            placeholder="How many people ?"
+          />
+        </ScrollView>
+      );
+    }
+    this.setState({datas: values});
+  };
 
   render() {
     const wheelOptions = {
-      rewards: participants,
+      rewards: this.state.datas,
       knobSize: 30,
       borderWidth: 5,
       borderColor: '#fff',
@@ -46,6 +70,20 @@ class App extends Component {
     return (
       <View style={styles.container}>
         <StatusBar barStyle={'light-content'} />
+        <View style={styles.header}>
+          <Text style={styles.headText}>Wheel of Fortune</Text>
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.input}
+            onChangeText={value => this.setState({value: value})}
+            value={this.state.value}
+            placeholder="How many people ?"
+            keyboardType="numeric"
+            onPressOut={this.onPressOut}
+          />
+        </View>
+
         <WheelOfFortune
           options={wheelOptions}
           getWinner={(value, index) => {
@@ -64,7 +102,7 @@ class App extends Component {
         {this.state.winnerIndex != null && (
           <View style={styles.winnerView}>
             <Text style={styles.winnerText}>
-              You win {participants[this.state.winnerIndex]}
+              You win {this.state.datas[this.state.winnerIndex]}
             </Text>
             <TouchableOpacity
               onPress={() => {
@@ -85,12 +123,32 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+
     backgroundColor: '#ffffff',
   },
+  header: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+  inputView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+  },
+  headText: {
+    fontSize: 25,
+    color: 'black',
+    fontWeight: 'bold',
+  },
   startButtonView: {
-    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   startButton: {
     backgroundColor: 'rgba(0,0,0,.5)',
