@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   StatusBar,
-  Button,
+  KeyboardAvoidingView,
   TouchableOpacity,
   TextInput,
 } from 'react-native';
@@ -20,12 +20,15 @@ class App extends Component {
       winnerValue: null,
       winnerIndex: null,
       started: false,
-      value: null,
+      deger: null,
       exe: '',
       visible: false,
       datas: ['A', 'B', 'C'],
     };
     this.child = null;
+  }
+  componentWillUnmount() {
+    this.setState({deger: null});
   }
 
   buttonPress = () => {
@@ -36,25 +39,28 @@ class App extends Component {
   };
   onPressOut = () => {
     this.setState({visible: true});
+    console.log(this.state.visible);
+
+    this.inputs;
   };
   inputs = () => {
     var values = [];
-    for (let index = 0; index < this.state.value; index++) {
+    for (let index = 0; index < this.state.deger; index++) {
       return (
-        <ScrollView>
-          <TextInput
-            style={styles.input}
-            onChangeText={value => this.setState({exe: value})}
-            value={this.state.exe}
-            placeholder="How many people ?"
-          />
-        </ScrollView>
+        <TextInput
+          style={styles.input}
+          onChangeText={value => this.setState({exe: value})}
+          value={this.state.exe}
+          placeholder="How many people ?"
+        />
       );
     }
     this.setState({datas: values});
+    console.log(this.state.datas.length);
   };
 
   render() {
+    console.log(this.state.deger);
     const wheelOptions = {
       rewards: this.state.datas,
       knobSize: 30,
@@ -68,53 +74,59 @@ class App extends Component {
       onRef: ref => (this.child = ref),
     };
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <StatusBar barStyle={'light-content'} />
         <View style={styles.header}>
           <Text style={styles.headText}>Wheel of Fortune</Text>
         </View>
+
         <View style={styles.inputView}>
           <TextInput
             style={styles.input}
-            onChangeText={value => this.setState({value: value})}
-            value={this.state.value}
+            onChangeText={value => this.setState({deger: value})}
+            value={this.state.deger}
             placeholder="How many people ?"
             keyboardType="numeric"
             onPressOut={this.onPressOut}
           />
+          {this.state.deger > 1 ? this.inputs() : null}
         </View>
 
-        <WheelOfFortune
-          options={wheelOptions}
-          getWinner={(value, index) => {
-            this.setState({winnerValue: value, winnerIndex: index});
-          }}
-        />
-        {!this.state.started && (
-          <View style={styles.startButtonView}>
-            <TouchableOpacity
-              onPress={() => this.buttonPress()}
-              style={styles.startButton}>
-              <Text style={styles.startButtonText}>Spin to win!</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        {this.state.winnerIndex != null && (
-          <View style={styles.winnerView}>
-            <Text style={styles.winnerText}>
-              You win {this.state.datas[this.state.winnerIndex]}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                this.setState({winnerIndex: null});
-                this.child._tryAgain();
-              }}
-              style={styles.tryAgainButton}>
-              <Text style={styles.tryAgainText}>TRY AGAIN</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
+        {/* <View style={styles.teker}>
+          <WheelOfFortune
+            options={wheelOptions}
+            getWinner={(value, index) => {
+              this.setState({winnerValue: value, winnerIndex: index});
+            }}
+          />
+          {!this.state.started && (
+            <View style={styles.startButtonView}>
+              <TouchableOpacity
+                onPress={() => this.buttonPress()}
+                style={styles.startButton}>
+                <Text style={styles.startButtonText}>Spin to win!</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {this.state.winnerIndex != null && (
+            <View style={styles.winnerView}>
+              <Text style={styles.winnerText}>
+                You win {this.state.datas[this.state.winnerIndex]}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({winnerIndex: null});
+                  this.child._tryAgain();
+                }}
+                style={styles.tryAgainButton}>
+                <Text style={styles.tryAgainText}>TRY AGAIN</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View> */}
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -126,9 +138,13 @@ const styles = StyleSheet.create({
 
     backgroundColor: '#ffffff',
   },
+  teker: {
+    flex: 8,
+  },
   header: {
     justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
   },
   input: {
     height: 40,
@@ -137,9 +153,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   inputView: {
-    justifyContent: 'center',
-    alignItems: 'center',
     marginTop: 30,
+    flex: 10,
   },
   headText: {
     fontSize: 25,
@@ -161,9 +176,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   winnerView: {
-    position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
+    bottom: 200,
   },
   tryAgainButton: {
     padding: 10,
