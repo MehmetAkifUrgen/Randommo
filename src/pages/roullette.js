@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import Roulette from 'react-native-casino-roulette';
-import wheel from '../assets/images/wheel.png';
-import marker from '../assets/images/marker.png';
+import wheel from '../../assets/images/wheel.png';
+import marker from '../../assets/images/marker.png';
+import colors from '../colors';
 
 //Roulette numbers
 const numbers = [
@@ -29,19 +30,26 @@ export default class App extends Component {
     const {option, rouletteState, optionCustom, rouletteCustomState} =
       this.state;
     return (
-      <View style={{alignItems: 'center'}}>
-        <Text>{`Option selected: ${option}`}</Text>
-        <Text>{`Roulette state: ${rouletteState}`}</Text>
+      <View style={styles.container}>
+        <Text style={styles.instructions}>{`Option selected: ${option}`}</Text>
+        <Text
+          style={
+            styles.instructions
+          }>{`Roulette state: ${rouletteState}`}</Text>
         <Roulette
+          duration={5000}
           enableUserRotate={rouletteState == 'stop'}
           background={wheel}
           onRotate={this.onRotate}
           onRotateChange={this.onRotateChange}
           marker={marker}
           options={options}
-          markerWidth={20}></Roulette>
+          markerWidth={30}></Roulette>
 
-        <Text>{`Roulette state: ${rouletteCustomState}`}</Text>
+        <Text
+          style={
+            styles.instructions
+          }>{`Roulette state: ${rouletteCustomState}`}</Text>
       </View>
     );
   }
@@ -76,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: colors.open,
   },
   welcome: {
     fontSize: 20,
@@ -85,7 +93,7 @@ const styles = StyleSheet.create({
   },
   instructions: {
     textAlign: 'center',
-    color: '#333333',
+    color: colors.font,
     marginBottom: 5,
   },
 });
