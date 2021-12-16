@@ -7,18 +7,13 @@ import Dice from './pages/dice';
 import Roulette from './pages/roullette';
 import WhellofFortune from './pages/whelloffortune';
 import colors from './colors';
-import Main from './pages/main';
+
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="Main"
-          component={Main}
-        />
         <Stack.Screen
           options={{
             headerTitle: 'WhellofFortune',
